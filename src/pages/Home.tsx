@@ -40,6 +40,19 @@ const Home: React.FC = () => {
     }
   };
 
+  // Function to handle custom search query
+  const handleCustomSearch = (query: string) => {
+    // Dispatch a custom event to change the tab and start search with custom query
+    const tabChangeEvent = new CustomEvent('changeTab', {
+      detail: { 
+        tab: 'knowledge',
+        autoStartSearch: true,
+        searchQuery: query
+      }
+    });
+    document.dispatchEvent(tabChangeEvent);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-180px)] p-8">
       <div className="max-w-3xl w-full text-center mb-12">
@@ -79,6 +92,44 @@ const Home: React.FC = () => {
               disabled={!taskInput.trim()}
             >
               <ArrowRight className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Search the Knowledge Graph Section */}
+      <div className="w-full max-w-3xl mb-8">
+        <h3 className="text-xl font-medium text-gray-700 mb-4">Search the Knowledge Graph</h3>
+        
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+          <div className="flex justify-center mb-6">
+            <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
+              <Search className="h-8 w-8 text-blue-500" />
+            </div>
+          </div>
+          
+          <p className="text-center text-gray-600 mb-6">
+            Enter a search query to find relationships between companies, investors, and industries.
+          </p>
+          
+          <div className="space-y-3 max-w-lg mx-auto">
+            <button
+              onClick={() => handleCustomSearch("fintech companies in crypto space using GenAI")}
+              className="w-full text-left p-3 border border-gray-200 rounded-md hover:bg-gray-50 text-gray-700"
+            >
+              fintech companies in crypto space using GenAI
+            </button>
+            <button
+              onClick={() => handleCustomSearch("AI healthcare startups with recent funding")}
+              className="w-full text-left p-3 border border-gray-200 rounded-md hover:bg-gray-50 text-gray-700"
+            >
+              AI healthcare startups with recent funding
+            </button>
+            <button
+              onClick={() => handleCustomSearch("climate tech investors in Europe")}
+              className="w-full text-left p-3 border border-gray-200 rounded-md hover:bg-gray-50 text-gray-700"
+            >
+              climate tech investors in Europe
             </button>
           </div>
         </div>
@@ -126,39 +177,6 @@ const Home: React.FC = () => {
               </div>
             </div>
           ))}
-        </div>
-      </div>
-
-      {/* Quick Action Buttons */}
-      <div className="w-full max-w-3xl">
-        <h3 className="text-xl font-medium text-gray-700 mb-4">Quick Actions</h3>
-        <div className="flex flex-wrap justify-center gap-4">
-          <button 
-            onClick={() => navigateToKnowledgeGraph('fintech-crypto-genai')} 
-            className="flex items-center px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-md border border-gray-200"
-          >
-            <Database className="h-4 w-4 mr-2 text-gray-600" />
-            <span>Fintech Companies in Crypto Space Using GenAI</span>
-            <ArrowRight className="h-4 w-4 ml-2 text-gray-400" />
-          </button>
-          
-          <button 
-            onClick={() => navigateToKnowledgeGraph('ai-healthcare-startups')} 
-            className="flex items-center px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-md border border-gray-200"
-          >
-            <Calendar className="h-4 w-4 mr-2 text-gray-600" />
-            <span>AI Healthcare Startups</span>
-            <ArrowRight className="h-4 w-4 ml-2 text-gray-400" />
-          </button>
-          
-          <button 
-            onClick={() => navigateToKnowledgeGraph('climate-tech-investors')} 
-            className="flex items-center px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-md border border-gray-200"
-          >
-            <Book className="h-4 w-4 mr-2 text-gray-600" />
-            <span>Climate Tech Investors</span>
-            <ArrowRight className="h-4 w-4 ml-2 text-gray-400" />
-          </button>
         </div>
       </div>
 

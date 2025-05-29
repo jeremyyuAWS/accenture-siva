@@ -47,50 +47,84 @@ const KnowledgeGraph: React.FC = () => {
   useEffect(() => {
     const handleScenarioNavigation = (event: Event) => {
       const customEvent = event as CustomEvent;
-      if (customEvent.detail && customEvent.detail.tab === 'knowledge' && customEvent.detail.scenarioId) {
-        // Find the matching scenario
-        const scenarioId = customEvent.detail.scenarioId;
-        const scenario = popularSearchScenarios.find(s => s.id === scenarioId);
+      if (customEvent.detail && customEvent.detail.tab === 'knowledge') {
+        // Set search query if provided
+        if (customEvent.detail.searchQuery) {
+          setSearchQuery(customEvent.detail.searchQuery);
+        }
         
-        if (scenario) {
-          console.log("Scenario found, starting search:", scenario.title);
-          setCurrentScenario(scenario);
+        // Find the matching scenario if scenarioId is provided
+        if (customEvent.detail.scenarioId) {
+          const scenarioId = customEvent.detail.scenarioId;
+          const scenario = popularSearchScenarios.find(s => s.id === scenarioId);
           
-          // Set search query
-          const query = customEvent.detail.searchQuery || scenario.query || scenario.title;
-          setSearchQuery(query);
-          
-          // Add user message
-          setAiChat([{
-            role: 'user',
-            content: `Can you analyze the knowledge graph for ${scenario.title}?`
-          }]);
-          
-          // Start search immediately if autoStartSearch is true
-          if (customEvent.detail.autoStartSearch) {
-            setIsSearching(true);
+          if (scenario) {
+            console.log("Scenario found, starting search:", scenario.title);
+            setCurrentScenario(scenario);
             
-            // Add AI typing indicator and simulate response
-            setIsAiTyping(true);
+            // Set search query
+            const query = customEvent.detail.searchQuery || scenario.query || scenario.title;
+            setSearchQuery(query);
             
-            // Simulate AI typing delay
-            setTimeout(() => {
-              // Get random AI response
-              const aiResponse = AI_RESPONSES[Math.floor(Math.random() * AI_RESPONSES.length)];
-              setAiChat(prev => [...prev, { role: 'assistant', content: aiResponse }]);
-              setIsAiTyping(false);
-            }, 1500);
+            // Add user message
+            setAiChat([{
+              role: 'user',
+              content: `Can you analyze the knowledge graph for ${scenario.title}?`
+            }]);
             
-            // After a delay, finish the search and show document
-            setTimeout(() => {
-              setIsSearching(false);
+            // Start search immediately if autoStartSearch is true
+            if (customEvent.detail.autoStartSearch) {
+              setIsSearching(true);
               
-              // Show document after search completes
+              // Add AI typing indicator and simulate response
+              setIsAiTyping(true);
+              
+              // Simulate AI typing delay
               setTimeout(() => {
-                setShowDocument(true);
-              }, 500);
-            }, 5000);
+                // Get random AI response
+                const aiResponse = AI_RESPONSES[Math.floor(Math.random() * AI_RESPONSES.length)];
+                setAiChat(prev => [...prev, { role: 'assistant', content: aiResponse }]);
+                setIsAiTyping(false);
+              }, 1500);
+              
+              // After a delay, finish the search and show document
+              setTimeout(() => {
+                setIsSearching(false);
+                
+                // Show document after search completes
+                setTimeout(() => {
+                  setShowDocument(true);
+                }, 500);
+              }, 5000);
+            }
           }
+        } else if (customEvent.detail.autoStartSearch && customEvent.detail.searchQuery) {
+          // Handle direct search query without scenario
+          setIsSearching(true);
+          
+          // Add user message if not already added
+          if (!aiChat.some(msg => msg.role === 'user')) {
+            setAiChat([{
+              role: 'user',
+              content: `Can you analyze the knowledge graph for "${customEvent.detail.searchQuery}"?`
+            }]);
+          }
+          
+          // Add AI typing indicator and simulate response
+          setIsAiTyping(true);
+          
+          // Simulate AI typing delay
+          setTimeout(() => {
+            // Get random AI response
+            const aiResponse = AI_RESPONSES[Math.floor(Math.random() * AI_RESPONSES.length)];
+            setAiChat(prev => [...prev, { role: 'assistant', content: aiResponse }]);
+            setIsAiTyping(false);
+          }, 1500);
+          
+          // After a delay, finish the search
+          setTimeout(() => {
+            setIsSearching(false);
+          }, 5000);
         }
       }
     };
@@ -315,26 +349,6 @@ const KnowledgeGraph: React.FC = () => {
                 <p className="text-gray-500 max-w-md">
                   Enter a search query to find relationships between companies, investors, and industries.
                 </p>
-                <div className="mt-4 space-y-2 max-w-md mx-auto">
-                  <button
-                    onClick={() => handleSearch("fintech companies in crypto space using GenAI")}
-                    className="w-full text-left p-2 border border-gray-200 rounded-md hover:bg-gray-50 text-gray-700"
-                  >
-                    fintech companies in crypto space using GenAI
-                  </button>
-                  <button
-                    onClick={() => handleSearch("AI healthcare startups with recent funding")}
-                    className="w-full text-left p-2 border border-gray-200 rounded-md hover:bg-gray-50 text-gray-700"
-                  >
-                    AI healthcare startups with recent funding
-                  </button>
-                  <button
-                    onClick={() => handleSearch("climate tech investors in Europe")}
-                    className="w-full text-left p-2 border border-gray-200 rounded-md hover:bg-gray-50 text-gray-700"
-                  >
-                    climate tech investors in Europe
-                  </button>
-                </div>
               </div>
             </div>
           )}
