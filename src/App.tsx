@@ -3,7 +3,7 @@ import { AppProvider } from './context/AppContext';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Home from './pages/Home';
-import KnowledgeGraphReasoning from './pages/KnowledgeGraph';
+import KnowledgeGraph from './pages/KnowledgeGraph';
 import AgentHub from './pages/AgentHub';
 import DataIntegration from './pages/DataIntegration';
 import ReportCenter from './pages/ReportCenter';
@@ -63,7 +63,7 @@ function AppContent() {
       case 'home':
         return <Home />;
       case 'knowledge':
-        return <KnowledgeGraphReasoning />;
+        return <KnowledgeGraph />;
       case 'agents':
         return <AgentHub />;
       case 'company-search':
