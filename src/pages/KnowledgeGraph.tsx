@@ -48,6 +48,13 @@ const KnowledgeGraph: React.FC = () => {
     const handleScenarioNavigation = (event: Event) => {
       const customEvent = event as CustomEvent;
       if (customEvent.detail && customEvent.detail.tab === 'knowledge') {
+        // Clear previous chat/search if flag is set
+        if (customEvent.detail.clearPrevious) {
+          setAiChat([]);
+          setShowDocument(false);
+          setCurrentScenario(null);
+        }
+        
         // Set search query if provided
         if (customEvent.detail.searchQuery) {
           setSearchQuery(customEvent.detail.searchQuery);
@@ -102,13 +109,11 @@ const KnowledgeGraph: React.FC = () => {
           // Handle direct search query without scenario
           setIsSearching(true);
           
-          // Add user message if not already added
-          if (!aiChat.some(msg => msg.role === 'user')) {
-            setAiChat([{
-              role: 'user',
-              content: `Can you analyze the knowledge graph for "${customEvent.detail.searchQuery}"?`
-            }]);
-          }
+          // Add user message for the custom search
+          setAiChat([{
+            role: 'user',
+            content: `Can you analyze the knowledge graph for "${customEvent.detail.searchQuery}"?`
+          }]);
           
           // Add AI typing indicator and simulate response
           setIsAiTyping(true);
@@ -124,6 +129,15 @@ const KnowledgeGraph: React.FC = () => {
           // After a delay, finish the search
           setTimeout(() => {
             setIsSearching(false);
+            
+            // If the search is for a fintech+crypto+genai query, show the document
+            if (customEvent.detail.searchQuery.toLowerCase().includes('fintech') && 
+                customEvent.detail.searchQuery.toLowerCase().includes('crypto') && 
+                customEvent.detail.searchQuery.toLowerCase().includes('genai')) {
+              setTimeout(() => {
+                setShowDocument(true);
+              }, 500);
+            }
           }, 5000);
         }
       }

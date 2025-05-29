@@ -47,7 +47,8 @@ const Home: React.FC = () => {
       detail: { 
         tab: 'knowledge',
         autoStartSearch: true,
-        searchQuery: query
+        searchQuery: query,
+        clearPrevious: true // Add flag to clear previous chat/search
       }
     });
     document.dispatchEvent(tabChangeEvent);
@@ -134,7 +135,7 @@ const Home: React.FC = () => {
           </div>
         </div>
       </div>
-
+      
       {/* Popular Search Scenarios */}
       <div className="w-full max-w-3xl mb-8">
         <h3 className="text-xl font-medium text-gray-700 mb-4">Popular Searches</h3>
