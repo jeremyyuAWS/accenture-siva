@@ -14,7 +14,12 @@ import {
   List,
   Briefcase,
   FilePlus,
-  Webhook
+  Webhook,
+  Network,
+  User,
+  Newspaper,
+  Linkedin,
+  UserCircle
 } from 'lucide-react';
 import AgentCard from '../components/AgentCard';
 import ReportSettingsModal from '../components/ReportSettingsModal';
@@ -140,6 +145,124 @@ const AgentHub: React.FC = () => {
     }
   ];
   
+  // Role agents (from diagram)
+  const roleAgents = [
+    // Left side (data sources)
+    {
+      id: 'pitchbook-role',
+      name: 'Pitchbook',
+      description: 'Data source: Pitchbook',
+      status: 'active',
+      icon: <Database className="h-5 w-5" />, color: 'bg-blue-500'
+    },
+    {
+      id: 'apollo-role',
+      name: 'Apollo',
+      description: 'Data source: Apollo',
+      status: 'active',
+      icon: <Database className="h-5 w-5" />, color: 'bg-purple-500'
+    },
+    {
+      id: 'crunchbase-role',
+      name: 'Crunchbase',
+      description: 'Data source: Crunchbase',
+      status: 'active',
+      icon: <Database className="h-5 w-5" />, color: 'bg-green-500'
+    },
+    {
+      id: 'specter-role',
+      name: 'Specter',
+      description: 'Data source: Specter',
+      status: 'active',
+      icon: <Database className="h-5 w-5" />, color: 'bg-gray-500'
+    },
+    {
+      id: 'nvidia-role',
+      name: 'Nvidia',
+      description: 'Data source: Nvidia',
+      status: 'active',
+      icon: <Database className="h-5 w-5" />, color: 'bg-yellow-500'
+    },
+    {
+      id: 'perplexity-role',
+      name: 'Perplexity',
+      description: 'Data source: Perplexity',
+      status: 'active',
+      icon: <Search className="h-5 w-5" />, color: 'bg-teal-500'
+    },
+    {
+      id: 'google-role',
+      name: 'Google',
+      description: 'Data source: Google',
+      status: 'active',
+      icon: <Globe className="h-5 w-5" />, color: 'bg-red-500'
+    },
+    {
+      id: 'exa-role',
+      name: 'Exa',
+      description: 'Data source: Exa',
+      status: 'active',
+      icon: <Database className="h-5 w-5" />, color: 'bg-pink-500'
+    },
+    {
+      id: 'newsletters-role',
+      name: 'Newsletters',
+      description: 'Data source: Newsletters',
+      status: 'active',
+      icon: <Newspaper className="h-5 w-5" />, color: 'bg-indigo-500'
+    },
+    // Top (data types/tasks)
+    {
+      id: 'press-releases-role',
+      name: 'Press Releases',
+      description: 'Task: Press Releases',
+      status: 'active',
+      icon: <Newspaper className="h-5 w-5" />, color: 'bg-orange-500'
+    },
+    {
+      id: 'newsletters-task-role',
+      name: 'Newsletters (Task)',
+      description: 'Task: Newsletters',
+      status: 'active',
+      icon: <Newspaper className="h-5 w-5" />, color: 'bg-indigo-400'
+    },
+    {
+      id: 'linkedin-role',
+      name: 'Linkedin',
+      description: 'Task: Linkedin',
+      status: 'active',
+      icon: <Linkedin className="h-5 w-5" />, color: 'bg-blue-700'
+    },
+    {
+      id: 'website-role',
+      name: 'Website',
+      description: 'Task: Website',
+      status: 'active',
+      icon: <Globe className="h-5 w-5" />, color: 'bg-gray-400'
+    },
+    {
+      id: 'search-apis-role',
+      name: 'Search APIs',
+      description: 'Task: Search APIs',
+      status: 'active',
+      icon: <Search className="h-5 w-5" />, color: 'bg-green-400'
+    },
+    {
+      id: 'founder-interview-role',
+      name: 'Founder Interview',
+      description: 'Task: Founder Interview',
+      status: 'active',
+      icon: <UserCircle className="h-5 w-5" />, color: 'bg-yellow-400'
+    },
+    {
+      id: 'google-news-role',
+      name: 'Google News',
+      description: 'Task: Google News',
+      status: 'active',
+      icon: <Globe className="h-5 w-5" />, color: 'bg-red-400'
+    },
+  ];
+  
   // Close the current modal
   const closeModal = () => {
     setActiveModal(null);
@@ -211,6 +334,22 @@ const AgentHub: React.FC = () => {
               agent={agent}
               onActivate={(id) => {
                 alert(`Activating agent: ${id}`);
+              }}
+            />
+          ))}
+        </div>
+      </div>
+      
+      {/* Role Agents */}
+      <div className="mb-8">
+        <h3 className="text-lg font-medium text-primary mb-4">Role Agents</h3>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+          {roleAgents.map((agent) => (
+            <AgentCard
+              key={agent.id}
+              agent={agent}
+              onActivate={(id) => {
+                alert(`Simulated demo: ${agent.name} agent activated!`);
               }}
             />
           ))}
