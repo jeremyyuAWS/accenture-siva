@@ -23,14 +23,21 @@ const Home: React.FC = () => {
   const navigateToKnowledgeGraph = (scenarioId: string) => {
     console.log("Navigating to Knowledge Graph with scenario:", scenarioId);
     
-    // Dispatch a custom event to change the tab
-    const tabChangeEvent = new CustomEvent('changeTab', {
-      detail: { 
-        tab: 'knowledge',
-        scenarioId: scenarioId
-      }
-    });
-    document.dispatchEvent(tabChangeEvent);
+    // Find the matching scenario
+    const scenario = popularSearchScenarios.find(s => s.id === scenarioId);
+    
+    if (scenario) {
+      // Dispatch a custom event to change the tab and start search
+      const tabChangeEvent = new CustomEvent('changeTab', {
+        detail: { 
+          tab: 'knowledge',
+          scenarioId: scenarioId,
+          autoStartSearch: true,
+          searchQuery: scenario.query || scenario.title
+        }
+      });
+      document.dispatchEvent(tabChangeEvent);
+    }
   };
 
   return (

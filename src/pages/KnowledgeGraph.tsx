@@ -57,7 +57,7 @@ const KnowledgeGraph: React.FC = () => {
           setCurrentScenario(scenario);
           
           // Set search query
-          const query = scenario.query || scenario.title;
+          const query = customEvent.detail.searchQuery || scenario.query || scenario.title;
           setSearchQuery(query);
           
           // Add user message
@@ -66,32 +66,31 @@ const KnowledgeGraph: React.FC = () => {
             content: `Can you analyze the knowledge graph for ${scenario.title}?`
           }]);
           
-          // Start search immediately (important!)
-          setIsSearching(true);
-          
-          // Add AI typing indicator and simulate response
-          setIsAiTyping(true);
-          
-          // Simulate AI typing delay
-          setTimeout(() => {
-            // Get random AI response
-            const aiResponse = AI_RESPONSES[Math.floor(Math.random() * AI_RESPONSES.length)];
-            setAiChat(prev => [...prev, { role: 'assistant', content: aiResponse }]);
-            setIsAiTyping(false);
+          // Start search immediately if autoStartSearch is true
+          if (customEvent.detail.autoStartSearch) {
+            setIsSearching(true);
             
-            // The search will continue for a bit to show the full workflow animation
-            // No need to call handleSearch() as the isSearching state change will trigger the workflow
-          }, 1500);
-          
-          // After a delay, finish the search and show document
-          setTimeout(() => {
-            setIsSearching(false);
+            // Add AI typing indicator and simulate response
+            setIsAiTyping(true);
             
-            // Show document after search completes
+            // Simulate AI typing delay
             setTimeout(() => {
-              setShowDocument(true);
-            }, 500);
-          }, 5000);
+              // Get random AI response
+              const aiResponse = AI_RESPONSES[Math.floor(Math.random() * AI_RESPONSES.length)];
+              setAiChat(prev => [...prev, { role: 'assistant', content: aiResponse }]);
+              setIsAiTyping(false);
+            }, 1500);
+            
+            // After a delay, finish the search and show document
+            setTimeout(() => {
+              setIsSearching(false);
+              
+              // Show document after search completes
+              setTimeout(() => {
+                setShowDocument(true);
+              }, 500);
+            }, 5000);
+          }
         }
       }
     };
@@ -111,7 +110,8 @@ const KnowledgeGraph: React.FC = () => {
         const event = new CustomEvent('changeTab', {
           detail: { 
             tab: 'knowledge',
-            scenarioId: scenarioId
+            scenarioId: scenarioId,
+            autoStartSearch: true
           }
         });
         document.dispatchEvent(event);
