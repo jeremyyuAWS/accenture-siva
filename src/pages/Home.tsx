@@ -19,7 +19,7 @@ import { popularSearchScenarios } from '../data/demoScenarios';
 const Home: React.FC = () => {
   const [taskInput, setTaskInput] = useState('');
 
-  // Function to handle navigation to Knowledge Graph tab
+  // Function to handle navigation to Knowledge Graph tab with auto search
   const navigateToKnowledgeGraph = (scenarioId: string) => {
     console.log("Navigating to Knowledge Graph with scenario:", scenarioId);
     
@@ -32,7 +32,7 @@ const Home: React.FC = () => {
         detail: { 
           tab: 'knowledge',
           scenarioId: scenarioId,
-          autoStartSearch: true,
+          autoStartSearch: true,  // Add this flag to auto-start the search
           searchQuery: scenario.query || scenario.title
         }
       });

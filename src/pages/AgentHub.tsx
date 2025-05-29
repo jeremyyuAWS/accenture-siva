@@ -5,9 +5,7 @@ import {
   FileText, 
   Settings, 
   Clock, 
-  Play, 
-  X, 
-  PlusCircle, 
+  Network,
   Database,
   Search,
   BookOpen,
@@ -18,6 +16,7 @@ import {
 } from 'lucide-react';
 import AgentCard from '../components/AgentCard';
 import ReportSettingsModal from '../components/ReportSettingsModal';
+import { popularSearchScenarios } from '../data/demoScenarios';
 
 const AgentHub: React.FC = () => {
   const [activeModal, setActiveModal] = useState<string | null>(null);
@@ -135,14 +134,73 @@ const AgentHub: React.FC = () => {
       name: 'Add New Agent',
       description: 'Configure a new specialized agent for your needs',
       isAddCard: true,
-      icon: <PlusCircle className="h-5 w-5" />,
+      icon: <Plus className="h-5 w-5" />,
       color: 'bg-gray-200'
+    }
+  ];
+  
+  // Scenario agents - NEW
+  const scenarioAgents = [
+    {
+      id: 'fintech-crypto-genai',
+      name: 'Fintech + Crypto + GenAI',
+      description: 'Discovers fintech companies operating in crypto space using generative AI',
+      status: 'active',
+      lastRun: '5 minutes ago',
+      icon: <Database className="h-5 w-5" />,
+      color: 'bg-blue-600'
+    },
+    {
+      id: 'ai-healthcare-startups',
+      name: 'AI Healthcare Startups',
+      description: 'Identifies innovative AI startups in the healthcare sector',
+      status: 'active',
+      lastRun: '20 minutes ago',
+      icon: <Bot className="h-5 w-5" />,
+      color: 'bg-green-600'
+    },
+    {
+      id: 'climate-tech-investors',
+      name: 'Climate Tech Investors',
+      description: 'Finds top investors funding climate tech and sustainability companies',
+      status: 'active',
+      lastRun: '35 minutes ago',
+      icon: <FileText className="h-5 w-5" />,
+      color: 'bg-emerald-600'
+    },
+    {
+      id: 'cyber-security-acquisitions',
+      name: 'Cybersecurity Acquisitions',
+      description: 'Tracks recent M&A activity in the cybersecurity industry',
+      status: 'active',
+      lastRun: '1 hour ago',
+      icon: <Search className="h-5 w-5" />,
+      color: 'bg-violet-600'
     }
   ];
   
   // Close the current modal
   const closeModal = () => {
     setActiveModal(null);
+  };
+
+  // Activate a scenario agent (navigate to Knowledge Graph tab)
+  const activateScenarioAgent = (scenarioId: string) => {
+    // Find the matching scenario
+    const scenario = popularSearchScenarios.find(s => s.id === scenarioId);
+    
+    if (scenario) {
+      // Dispatch a custom event to change the tab and start search
+      const tabChangeEvent = new CustomEvent('changeTab', {
+        detail: { 
+          tab: 'knowledge',
+          scenarioId: scenarioId,
+          autoStartSearch: true,  // Auto-start the search
+          searchQuery: scenario.query || scenario.title
+        }
+      });
+      document.dispatchEvent(tabChangeEvent);
+    }
   };
 
   return (
@@ -162,6 +220,22 @@ const AgentHub: React.FC = () => {
           <p className="text-secondary">
             Agents automatically collect data, analyze information, and execute tasks based on your needs.
           </p>
+        </div>
+      </div>
+      
+      {/* Scenario Agents - NEW */}
+      <div className="mb-8">
+        <h3 className="text-lg font-medium text-primary mb-4">Scenario Agents</h3>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+          {scenarioAgents.map((agent) => (
+            <AgentCard
+              key={agent.id}
+              agent={agent}
+              onActivate={(id) => {
+                activateScenarioAgent(id);
+              }}
+            />
+          ))}
         </div>
       </div>
       
@@ -210,7 +284,15 @@ const AgentHub: React.FC = () => {
               key={agent.id}
               agent={agent}
               onActivate={(id) => {
-                alert(`Activating agent: ${id}`);
+                if (id === 'knowledge-graph-agent') {
+                  // Navigate to Knowledge Graph tab when this agent is activated
+                  const tabChangeEvent = new CustomEvent('changeTab', {
+                    detail: { tab: 'knowledge' }
+                  });
+                  document.dispatchEvent(tabChangeEvent);
+                } else {
+                  alert(`Activating agent: ${id}`);
+                }
               }}
             />
           ))}
